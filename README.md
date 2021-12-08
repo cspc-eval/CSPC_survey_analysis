@@ -1,2 +1,2 @@
 # CSPC_survey_analysis
-Code development for CPSC survey data analysis
+Code development for CSPC survey data analysis
