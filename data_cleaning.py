@@ -10,7 +10,7 @@ survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
 q_type = pd.read_csv("q_type.csv", encoding = 'utf-8')
 
 
-#qualitatitve dataset
+#qualitatitve dataset-----------------------------------------
 #select questions with open-ended questions for qualitative analysis; where q_type['type_1'] == open
 qual_q = q_type[q_type['type_1'] == 'open']
 #select first column to get a list of column names of 'survey_raw' for open-ended questions
@@ -23,7 +23,7 @@ qual_data = survey_raw[survey_raw.columns.intersection(qual_q_list)]
 qual_data.to_csv("qualitatitive_data.csv", encoding = 'utf-8')
 
 
-#quantitative dataset
+#quantitative dataset-----------------------------------------
 #select questions with closed-ended questions for quantitative analysis; where q_type['type_1'] == closed
 quant_q = q_type[q_type['type_1'] == 'closed']
 #select first column to get a list of column names of 'survey_raw' for open-ended questions
