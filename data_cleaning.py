@@ -1,5 +1,6 @@
 #This code takes raw survey data csv as an input and splits the csv into quantitative (closed) and qualitative (open-ended survey questions) as csv outputs 
 
+
 #import packages
 import pandas as pd
 
@@ -33,5 +34,3 @@ quant_q_list = quant_q['question'].tolist()
 quant_data = survey_raw[survey_raw.columns.intersection(quant_q_list)]
 #save to csv
 quant_data.to_csv("quantitative_data.csv", encoding = 'utf-8')
-
-
