@@ -33,10 +33,12 @@ q1 = pd.DataFrame(q1).reset_index() #change to dataframe and reset index
 q1.columns = ['answer', 'percent'] #change name of columns
 colors = ['#203864', '#4472c4', '#8faadc', '#b4c7e7', '#9dc3e6', '#e3877d', '#c00000', '#a5a5a5']
 
-plt.pie(q1['percent'], labels = q1['answer'], colors = colors)
-plt.show()
+
 
 def pie_chart(df):
+    """
+    This function creates pie charts from dataframes (df) as an input and loops through each column to create a bar graph (output) for each column. 
+    """
     for column in df:
         q = df[column].value_counts(normalize = True) 
         q = pd.DataFrame(q).reset_index()
