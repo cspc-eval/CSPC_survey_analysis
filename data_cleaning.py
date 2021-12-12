@@ -5,6 +5,7 @@
 import pandas as pd
 
 #read in exit survey data
+##note: survey data to be downloaded from SimpleSurvey ==> Reports ==> Export response data, and to download a csv file with default options
 survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
 
 #read in q_type.csv which has the type of questions for the survey
