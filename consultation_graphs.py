@@ -30,3 +30,8 @@ def bar_chart(df, colors):
 bars = survey_raw[['Question 1', 'Question 2a)', 'Question 2d)']]
 #run the function for bar charts
 bar_chart(bars, colors)
+
+#Question 2d needs customization as the x axis labels were unreadable
+
+#Question 8 requires a stacked bar chart
+survey_raw['Question 8']
