@@ -5,6 +5,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
+import textwrap
 
 #read in exit survey data
 survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
@@ -31,12 +32,14 @@ def bar_chart(df, colors, order):
         ax.set(xlabel='', ylabel='percent', title=column) #calling for the labels for x,y axes and title
         plt.show()
 
+#------------------------------------------------
+#Question 1 and Question 2a)
 #take questions that are to be graphed as a bar chart for the consultation deck
 bars = survey_raw[['Question 1', 'Question 2a)']]
 #run the function for bar charts
 bar_chart(bars, colors, order)
 
-
+#Question 2d: "For CSPC 2022 next year, would you prefer"; output: horizontal bar chart
 #Question 2d needs customization as the x axis labels were unreadable
 def convert_percent(question):
     """
@@ -49,12 +52,23 @@ def convert_percent(question):
     df['percent'] = df['percent']*100
     return df
 
-question = 'Question 2d)'
+question = 'Question 2d)' 
 q2d = convert_percent(question) #example of how to use the function "convert_percent"
 
 
-#ax = sns.catplot(x = 'answer', y = 'percent', kind = "bar", data = q2d, palette = colors)
-#plt.show()
+ax = sns.catplot(y = 'answer', x = 'percent', kind = "bar", data = q2d, color = '#203864')
+ax.set_yticklabels([textwrap.fill(e, 30) for e in q2d['answer'].head()]) #wraps the text
+plt.show()
+#still need to adjust the margins so that the text is readable
+#can also look at reducing the word count for each answer (y axis label)
 
+#--------------------------------------------------------
 #Question 8 requires a stacked bar chart
-q8= survey_raw['Question 8']
+#the questions has multiple columns so first collect all columns for question 8
+
+#extract all columns for Question 8
+filter_col = [col for col in survey_raw if col.startswith('Question 8')]
+filter_col
+
+q8 = survey_raw[filter_col]
+q8
