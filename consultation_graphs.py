@@ -6,6 +6,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 import textwrap
+import numpy as np
 
 #read in exit survey data
 survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
@@ -66,9 +67,38 @@ plt.show()
 #Question 8 requires a stacked bar chart
 #the questions has multiple columns so first collect all columns for question 8
 
-#extract all columns for Question 8
-filter_col = [col for col in survey_raw if col.startswith('Question 8')]
-filter_col
+#extract all columns for Question 8 "Please indicate your agreement with the following statements about the 2021 CSPC conference" 
+filter_col = [col for col in survey_raw if col.startswith('Question 8')] #creates a list of column names for question 8
+q8 = survey_raw[filter_col] #creates a subset of data for question 8
 
-q8 = survey_raw[filter_col]
-q8
+df = q8.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T #calculates the percentage of each answer and transposes the dataframe
+df.columns = df.columns.fillna('NaN')
+
+#create a list of colors to be used in the bar charts
+colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#a5a5a5', '#e3877d', '#c00000', '#E6E6FA']
+
+#create a list of the orders for the x axis
+order_stacked = ['Strongly Agree', 'Agree' , 'Neutral', 'Disagree', 'Strongly Disagree', 'Unsure', 'NaN']
+
+
+ax = df[order_stacked].plot(kind='barh', #selecting the order of columns
+                    stacked=True, 
+                    color=colors_stacked,
+                    figsize=(10, 6))  
+
+""" for n, x in enumerate([*df.index.values]):
+    for (proportion, y_loc) in zip(df.loc[x],
+                                    df.loc[x].cumsum()):
+                
+        plt.text(x=(y_loc - proportion) + (proportion / 2),
+                 y=n - 0.11,
+                 s=f'({np.round(proportion * 100, 1)}%)', 
+                 color="black",
+                 fontsize=12,
+                 fontweight="bold")  """ 
+ax.legend(loc="upper left", ncol = 7, prop={'size': 8}) #adjust the legend position and font size
+ax.set_yticklabels([textwrap.fill(e, 30) for e in df.index]) #wraps the text
+plt.tight_layout()
+plt.subplots_adjust(left=0.2)
+plt.show()
+
