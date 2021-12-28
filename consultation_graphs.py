@@ -74,6 +74,9 @@ q8 = survey_raw[filter_col] #creates a subset of data for question 8
 df = q8.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T #calculates the percentage of each answer and transposes the dataframe
 df.columns = df.columns.fillna('NaN')
 
+df['Questions'] = ['Welcoming and Inclusive Environment', 'Commitment to Diversity and Equity', 'Content Included Diverse Perspectives'] #add new column for labelling graph
+df = df.set_index('Questions') #set the questions column as the index
+df = df*100
 #create a list of colors to be used in the bar charts
 colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#a5a5a5', '#e3877d', '#c00000', '#E6E6FA']
 
@@ -97,8 +100,6 @@ ax = df[order_stacked].plot(kind='barh', #selecting the order of columns
                  fontsize=12,
                  fontweight="bold")  """ 
 ax.legend(loc="upper left", ncol = 7, prop={'size': 8}) #adjust the legend position and font size
-ax.set_yticklabels([textwrap.fill(e, 30) for e in df.index]) #wraps the text
-plt.tight_layout()
-plt.subplots_adjust(left=0.2)
+ax.set(xlabel='Percentage of Responses', ylabel='') #label for x axis
+ax.set_yticklabels([textwrap.fill(e, 12.5) for e in df.index]) #wraps the text
 plt.show()
-
