@@ -9,7 +9,7 @@ import textwrap
 import numpy as np
 import matplotlib.ticker as mtick
 
-#read in exit survey data
+#read in exit survey data (raw .csv file downloaded from simplesurvey)
 survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
 
 #create a list of colors to be used in the bar charts
