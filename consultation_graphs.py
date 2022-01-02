@@ -18,6 +18,7 @@ colors = ['#203864', '#4472c4', '#b4c7e7', '#a5a5a5', '#c00000']
 order = ["Outstanding", "Excellent", "Good", "Fair", "Poor"]
 
 #function for creating the bar charts
+
 def bar_chart(df, colors, order):
     """
     This function creates bar charts from dataframes (df) as an input and loops through each column to create a bar graph (output) for each column. 
@@ -29,9 +30,20 @@ def bar_chart(df, colors, order):
         q.columns = ['answer', 'percent']
         q['percent'] = q['percent']*100
     
-        ax = sns.catplot(x = 'answer', y = 'percent', kind = "bar", data = q, order = order, palette = colors)
-        ax.set(xlabel='', ylabel='', title=column) #calling for the labels for x,y axes and title
+        g = sns.catplot(x = 'answer', y = 'percent', kind = "bar", data = q, order = order, palette = colors)
+        
+        # extract the matplotlib axes_subplot objects from the FacetGrid
+        ax = g.facet_axis(0, 0)
+
+        # iterate through the axes containers
+        for c in ax.containers:
+            labels = [f'{int(v.get_height())}%' for v in c]
+            ax.bar_label(c, labels=labels, label_type='edge')
+
+        ax.set(xlabel='', ylabel='') #calling for the labels for x,y axes and title
+        fig = plt.gcf()
         plt.show()
+        fig.savefig(column, dpi=300)
 
 #------------------------------------------------
 #Question 1 and Question 2a)
@@ -100,7 +112,6 @@ colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#e3877d', '#c00000', '#a5a5a
 label_df = df[['Strongly Agree', 'Agree' , 'Neutral', 'Unsure']]
 #select NaN column
 Nan_df = df[['NaN']]
-Nan_df
 
 #graph
 ax = df.plot(kind='barh', #selecting the order of columns
