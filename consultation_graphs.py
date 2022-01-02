@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import textwrap
 import numpy as np
+import matplotlib.ticker as mtick
 
 #read in exit survey data
 survey_raw = pd.read_csv("exit_responses.csv", encoding = 'utf-8')
@@ -40,6 +41,7 @@ def bar_chart(df, colors, order):
             labels = [f'{int(v.get_height())}%' for v in c]
             ax.bar_label(c, labels=labels, label_type='edge')
 
+        ax.yaxis.set_major_formatter(mtick.PercentFormatter(decimals = 0)) #add percent symbol to x-axis
         ax.set(xlabel='', ylabel='') #calling for the labels for x,y axes and title
         fig = plt.gcf()
         plt.show()
@@ -70,9 +72,21 @@ question = 'Question 2d)'
 q2d = convert_percent(question) 
 
 #graph
-ax = sns.catplot(y = 'answer', x = 'percent', kind = "bar", data = q2d, color = '#203864')
+g2d = sns.catplot(y = 'answer', x = 'percent', kind = "bar", data = q2d, color = '#203864')
+g2d.fig.set_size_inches(8, 6) #set figure size
+# extract the matplotlib axes_subplot objects from the FacetGrid
+ax = g2d.facet_axis(0, 0)
+# iterate through the axes containers
+for c in ax.containers:
+    labels = [f'{int(v.get_width())}%' for v in c]
+    ax.bar_label(c, labels=labels, label_type='edge', padding = 2)
 ax.set_yticklabels([textwrap.fill(e, 30) for e in q2d['answer'].head()]) #wraps the text
+ax.set(xlabel='', ylabel='') #calling for the labels for x,y axes and title
+ax.xaxis.set_major_formatter(mtick.PercentFormatter()) #add percent symbol to x-axis
+fig = plt.gcf()
+plt.tight_layout()
 plt.show()
+fig.savefig('Question 2d)', dpi=300)
 #can also look at reducing the word count for each answer (y axis label)
 
 #--------------------------------------------------------
@@ -118,7 +132,6 @@ ax = df.plot(kind='barh', #selecting the order of columns
                     stacked=True, 
                     color=colors_stacked,
                     figsize=(10, 6))  
-
 #looping to label text for label_df in white
 for n, x in enumerate([*label_df.index.values]):
     for (proportion, x_loc) in zip(label_df.loc[x],
@@ -129,7 +142,6 @@ for n, x in enumerate([*label_df.index.values]):
                  s=proportion, 
                  color="white",
                  fontsize=8) 
-
 #looping to label text for df['NaN'] in black
 for n, x in enumerate([*Nan_df.index.values]):
     for (proportion) in zip(Nan_df.loc[x]):
@@ -139,15 +151,14 @@ for n, x in enumerate([*Nan_df.index.values]):
                  s=14, 
                  color="black",
                  fontsize=8) 
-
-
 ax.legend(loc="upper left", ncol = 7, prop={'size': 8}) #adjust the legend position and font size
 ax.set(xlabel='Percentage of Responses', ylabel='') #label for x axis
 ax.set_yticklabels([textwrap.fill(e, 12.5) for e in df.index]) #wraps the text
+ax.xaxis.set_major_formatter(mtick.PercentFormatter()) #add percent symbol to x-axis
 figq8 = plt.gcf()
 plt.show()
 plt.draw()
-figq8.savefig('q8', dpi=300)
+figq8.savefig('Question 8', dpi=300)
 
 
 
