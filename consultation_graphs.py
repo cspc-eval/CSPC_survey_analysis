@@ -69,21 +69,30 @@ plt.show()
 
 #extract all columns for Question 8 "Please indicate your agreement with the following statements about the 2021 CSPC conference" 
 filter_col = [col for col in survey_raw if col.startswith('Question 8')] #creates a list of column names for question 8
-q8 = survey_raw[filter_col] #creates a subset of data for question 8
 
-df = q8.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T #calculates the percentage of each answer and transposes the dataframe
+#create a subset of data for question 8
+q8 = survey_raw[filter_col] 
+
+#calculate the percentage of each answer and transposes the dataframe
+df = q8.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T 
+
+#Fill in 'NaN' for NAs
 df.columns = df.columns.fillna('NaN')
 
-df['Questions'] = ['Welcoming and Inclusive Environment', 'Commitment to Diversity and Equity', 'Content Included Diverse Perspectives'] #add new column for labelling graph
-df = df.set_index('Questions') #set the questions column as the index
+#add a new column for labelling the graph
+df['Questions'] = ['Welcoming and Inclusive Environment', 'Commitment to Diversity and Equity', 'Content Included Diverse Perspectives'] 
+#set the questions column as the index
+df = df.set_index('Questions') 
+#multiply all values by 100 to get the percentage in '%' rather than in decimals
 df = df*100
+
 #create a list of colors to be used in the bar charts
 colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#a5a5a5', '#e3877d', '#c00000', '#E6E6FA']
 
 #create a list of the orders for the x axis
 order_stacked = ['Strongly Agree', 'Agree' , 'Neutral', 'Disagree', 'Strongly Disagree', 'Unsure', 'NaN']
 
-
+#graph
 ax = df[order_stacked].plot(kind='barh', #selecting the order of columns
                     stacked=True, 
                     color=colors_stacked,
