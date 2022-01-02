@@ -30,7 +30,7 @@ def bar_chart(df, colors, order):
         q['percent'] = q['percent']*100
     
         ax = sns.catplot(x = 'answer', y = 'percent', kind = "bar", data = q, order = order, palette = colors)
-        ax.set(xlabel='', ylabel='percent', title=column) #calling for the labels for x,y axes and title
+        ax.set(xlabel='', ylabel='', title=column) #calling for the labels for x,y axes and title
         plt.show()
 
 #------------------------------------------------
@@ -40,8 +40,9 @@ bars = survey_raw[['Question 1', 'Question 2a)']]
 #run the function for bar charts
 bar_chart(bars, colors, order)
 
+#--------------------------------------------------
 #Question 2d: "For CSPC 2022 next year, would you prefer"; output: horizontal bar chart
-#Question 2d needs customization as the x axis labels were unreadable
+#Question 2d needs customization as the x axis labels are quite long
 def convert_percent(question):
     """
     This function will take the raw data and create a dataframe with a summary of data showing the percentages of each answer.
@@ -54,13 +55,12 @@ def convert_percent(question):
     return df
 
 question = 'Question 2d)' 
-q2d = convert_percent(question) #example of how to use the function "convert_percent"
+q2d = convert_percent(question) 
 
-
+#graph
 ax = sns.catplot(y = 'answer', x = 'percent', kind = "bar", data = q2d, color = '#203864')
 ax.set_yticklabels([textwrap.fill(e, 30) for e in q2d['answer'].head()]) #wraps the text
 plt.show()
-#still need to adjust the margins so that the text is readable
 #can also look at reducing the word count for each answer (y axis label)
 
 #--------------------------------------------------------
@@ -75,7 +75,6 @@ q8 = survey_raw[filter_col]
 
 #calculate the percentage of each answer and transposes the dataframe
 df = q8.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T 
-
 #Fill in 'NaN' for NAs
 df.columns = df.columns.fillna('NaN')
 
@@ -86,29 +85,58 @@ df = df.set_index('Questions')
 #multiply all values by 100 to get the percentage in '%' rather than in decimals
 df = df*100
 
-#create a list of colors to be used in the bar charts
-colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#a5a5a5', '#e3877d', '#c00000', '#E6E6FA']
+#rearrange column order
+df = df[['Strongly Agree', 'Agree' , 'Neutral', 'Disagree', 'Strongly Disagree', 'Unsure', 'NaN']]
 
-#create a list of the orders for the x axis
-order_stacked = ['Strongly Agree', 'Agree' , 'Neutral', 'Disagree', 'Strongly Disagree', 'Unsure', 'NaN']
+#change some column types to int
+df[['Strongly Agree', 'Agree' , 'Neutral', 'Unsure', 'NaN']] = df[['Strongly Agree', 'Agree' , 'Neutral', 'Unsure', 'NaN']].round(0).astype(int)
+#round column values to single decimal 
+df[['Disagree', 'Strongly Disagree']] = df[['Disagree', 'Strongly Disagree']].round(1)
+
+#create a list of colors to be used in the bar charts
+colors_stacked = ['#203864', '#4472c4', '#b4c7e7', '#e3877d', '#c00000', '#a5a5a5', '#C5C9C7']
+
+#select columns with values that are to be labelled
+label_df = df[['Strongly Agree', 'Agree' , 'Neutral', 'Unsure']]
+#select NaN column
+Nan_df = df[['NaN']]
+Nan_df
 
 #graph
-ax = df[order_stacked].plot(kind='barh', #selecting the order of columns
+ax = df.plot(kind='barh', #selecting the order of columns
                     stacked=True, 
                     color=colors_stacked,
                     figsize=(10, 6))  
 
-""" for n, x in enumerate([*df.index.values]):
-    for (proportion, y_loc) in zip(df.loc[x],
-                                    df.loc[x].cumsum()):
+#looping to label text for label_df in white
+for n, x in enumerate([*label_df.index.values]):
+    for (proportion, x_loc) in zip(label_df.loc[x],
+                                    label_df.loc[x].cumsum()):
                 
-        plt.text(x=(y_loc - proportion) + (proportion / 2),
-                 y=n - 0.11,
-                 s=f'({np.round(proportion * 100, 1)}%)', 
+        plt.text(x=(x_loc - proportion) + (proportion / 2) + 1.8,
+                 y=n,
+                 s=proportion, 
+                 color="white",
+                 fontsize=8) 
+
+#looping to label text for df['NaN'] in black
+for n, x in enumerate([*Nan_df.index.values]):
+    for (proportion) in zip(Nan_df.loc[x]):
+                
+        plt.text(x=90,
+                 y=n,
+                 s=14, 
                  color="black",
-                 fontsize=12,
-                 fontweight="bold")  """ 
+                 fontsize=8) 
+
+
 ax.legend(loc="upper left", ncol = 7, prop={'size': 8}) #adjust the legend position and font size
 ax.set(xlabel='Percentage of Responses', ylabel='') #label for x axis
 ax.set_yticklabels([textwrap.fill(e, 12.5) for e in df.index]) #wraps the text
+figq8 = plt.gcf()
 plt.show()
+plt.draw()
+figq8.savefig('q8', dpi=300)
+
+
+
