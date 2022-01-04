@@ -137,18 +137,18 @@ for n, x in enumerate([*label_df.index.values]):
     for (proportion, x_loc) in zip(label_df.loc[x],
                                     label_df.loc[x].cumsum()):
                 
-        plt.text(x=(x_loc - proportion) + (proportion / 2) + 0.8,
+        plt.text(x=(x_loc - proportion) + (proportion / 2) + 0.8, #placement of text
                  y=n,
-                 s=proportion, 
+                 s=proportion, #the label
                  color="white",
                  fontsize=8) 
 #looping to label text for df['NaN'] in black
 for n, x in enumerate([*Nan_df.index.values]):
     for (proportion) in zip(Nan_df.loc[x]):
                 
-        plt.text(x=90,
-                 y=n,
-                 s=14, 
+        plt.text(x=90, #x placement
+                 y=n, #y placement
+                 s=14, #label
                  color="black",
                  fontsize=8) 
 ax.legend(loc="upper left", ncol = 7, prop={'size': 8}) #adjust the legend position and font size
