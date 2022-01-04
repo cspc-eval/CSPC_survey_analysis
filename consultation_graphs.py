@@ -137,7 +137,7 @@ for n, x in enumerate([*label_df.index.values]):
     for (proportion, x_loc) in zip(label_df.loc[x],
                                     label_df.loc[x].cumsum()):
                 
-        plt.text(x=(x_loc - proportion) + (proportion / 2) + 1.8,
+        plt.text(x=(x_loc - proportion) + (proportion / 2) + 0.8,
                  y=n,
                  s=proportion, 
                  color="white",
