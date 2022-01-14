@@ -1,12 +1,10 @@
 #This is the base code is for creating bar charts
-#Graphs will be created for Q1, Q2a
+#Example graphs will be created for Q1, Q2a
 
 #import packages
 import pandas as pd
-from matplotlib import pyplot as plt
 import seaborn as sns
-#import textwrap
-#import numpy as np
+from matplotlib import pyplot as plt
 import matplotlib.ticker as mtick
 
 #read in exit survey data (raw .csv file downloaded from simplesurvey)
