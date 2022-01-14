@@ -1,4 +1,4 @@
-#This is the base code is for creating bar charts
+#This is the base code is for creating vertical bar charts
 #Example graphs will be created for Q1, Q2a
 
 #import packages
