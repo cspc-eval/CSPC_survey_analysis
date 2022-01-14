@@ -6,4 +6,9 @@ Code development for CSPC survey data analysis
 
 **consultation_graphs.py** is the code for the consultation deck delivered on January 7, 2022.
 
-**bar_charts.py** is the file with the base code for creating vertical bar charts. 
+**vertical_bar_charts.py** is the file with the base code for creating vertical bar charts. Will create and save a .png image of the graph(s) created. 
+
+**horizontal_bar_charts.py** is the file with the base code for creating horizontal bar charts. Will create and save a .png image of the graph(s) created. 
+
+**stacked_bar_charts.py** is the file with the base code for creating stacked bar charts. Will create and save a .png image of the graph(s) created. 
+
