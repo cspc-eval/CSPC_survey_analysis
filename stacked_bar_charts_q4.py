@@ -28,9 +28,9 @@ df = q4.apply(lambda x: x.value_counts(normalize = True, dropna=False)).T
 df.columns = df.columns.fillna('NaN')
 
 #add a new column for labelling the graph
-df['Questions'] = ['Registration Process', 'Virtual Conference Platform', 'Virtual Networking Opportunities', 'Exhibition Booth Interactions', 'Gamification', 'Ease of Virtual Navigation', 'Tech Support Quality', 'DROP Ease of nav. duplicate?', 'Conference Duration', 'Conference Accessibility', 'AV Quality of Panels'] 
+df['Questions'] = ['Registration process', 'Virtual conference platform', 'Virtual networking opportunities', 'Exhibition booth interactions', 'Gamification', 'Ease of navigating virtual conference', 'Tech support quality', 'Ease of navigating online conference program', 'Conference duration', 'Conference accessibility', 'Panel A/V quality'] 
 # drop the repeated 'Ease of virtual navigation' question from dataframe
-df = df[~df.Questions.str.startswith(('DROP'))]
+#df = df[~df.Questions.str.startswith(('DROP'))]
 #set the questions column as the index
 df = df.set_index('Questions') 
 #multiply all values by 100 to get the percentage in '%' rather than in decimals
