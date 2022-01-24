@@ -1,6 +1,9 @@
 #This is the base code is for creating horizontal bar charts
 #graphs will be created for Q3
 
+# Note that respondents could select multiple options for Q3 response.
+# Therefore, the percentages shown in the figure reflect how many (out of all respondents) selected each option.
+
 #import packages
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -13,10 +16,11 @@ def convert_percent(survey_raw, filter_col):
     This function will take the raw data and create a dataframe with a summary of data showing the percentages of each answer.
     The function will return a pandas dataframe.
     """
+    n = survey_raw.shape[0] # number of respondants to survey
     df = survey_raw[filter_col].count()
     df = pd.DataFrame(df).reset_index()
     df.columns = ['answer', 'percent']
-    df['percent'] = df['percent'].divide(df['percent'].sum()) *100
+    df['percent'] = df['percent'].divide(n) *100
     return df
 
 
@@ -44,9 +48,9 @@ for c in ax.containers:
     labels = [f'{int(v.get_width())}%' for v in c]
     ax.bar_label(c, labels=labels, label_type='edge', padding = 2)
 ax.set_yticklabels([textwrap.fill(label, 30) for label in df['answer']]) #wraps the text
-ax.set(xlabel='Percentage of Responses', ylabel='') #calling for the labels for x,y axes and title
+ax.set(xlabel='Percentage of Respondents', ylabel='') #calling for the labels for x,y axes and title
 ax.xaxis.set_major_formatter(mtick.PercentFormatter()) #add percent symbol to x-axis
-ax.set_xlim([0, 30])
+ax.set_xlim([0, 80])
 fig = plt.gcf()
 plt.tight_layout()
 plt.show()
