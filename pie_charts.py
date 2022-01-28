@@ -52,55 +52,65 @@ q_type = pd.read_csv(survey_fileQ_path, encoding = 'utf-8')
         #2) closed, nominal/ranked answers
         #3) closed, multiple answers
 
-    #for subset csv #1 (mc_data.csv)
-    #select data with type2 in q_type.csv as 'mc' to select closed, multiple choice answers
-mc_q = q_type[q_type['type_2'] == 'mc']
-    #select first column to get a list of column names of 'survey_raw' for open-ended questions
-mc_q_list = mc_q['question'].tolist()
-mc_data = survey_raw[survey_raw.columns.intersection(mc_q_list)]
-
-### Plotting
-
 #Questions 13, 15-20
+subset1 = False
+if subset1:
+        #for subset csv #1 (mc_data.csv)
+    #select data with type2 in q_type.csv as 'mc' to select closed, multiple choice answers
+    mc_q = q_type[q_type['type_2'] == 'mc']
+    #select first column to get a list of column names of 'survey_raw' for open-ended questions
+    mc_q_list = mc_q['question'].tolist()
+    mc_data = survey_raw[survey_raw.columns.intersection(mc_q_list)]
 
-#Question 16
-q16 = convert_percent(mc_data,'Question 16')
-q16.sort_values('percent', ascending=0)
-pie_chart(q16,'Question 16')
+    #Question 13
+    q13 = convert_percent(mc_data,'Question 13')
+    pie_chart(q13,'Question 13')
 
-#Question 13
-q13 = convert_percent(mc_data,'Question 13')
-pie_chart(q13,'Question 13')
+    #Question 15
+    q15 = convert_percent(mc_data,'Question 15')
+    pie_chart(q15,'Question 15')
 
-#Question 15
-q15 = convert_percent(mc_data,'Question 15')
-pie_chart(q15,'Question 15')
+    #Question 16
+    q16 = convert_percent(mc_data,'Question 16')
+    pie_chart(q16,'Question 16')
 
-#Question 17
-q17 = convert_percent(mc_data,'Question 17')
-pie_chart(q17,'Question 17')
+    #Question 17
+    q17 = convert_percent(mc_data,'Question 17')
+    pie_chart(q17,'Question 17')
 
-#Question 18
-q18 = convert_percent(mc_data,'Question 18')
-pie_chart(q18,'Question 18')
+    #Question 18
+    q18 = convert_percent(mc_data,'Question 18')
+    pie_chart(q18,'Question 18')
 
-#Question 19
-q19 = convert_percent(mc_data,'Question 19')
-pie_chart(q19,'Question 19')
+    #Question 19
+    q19 = convert_percent(mc_data,'Question 19')
+    pie_chart(q19,'Question 19')
 
-#Question 20
-q20 = convert_percent(mc_data,'Question 20')
-pie_chart(q20,'Question 20')
+    #Question 20
+    q20 = convert_percent(mc_data,'Question 20')
+    pie_chart(q20,'Question 20')
 
-
+#Question 14,(multiple choice, closed)
+subset3 = True
+if subset3:
     #for subset csv #3 (multi_answer_data.csv)
     #select data with type2 in q_type.csv as 'multi-answer' to select closed, multi-selection answers
-multia_q = q_type[q_type['type_2'] == 'multi-answer']
-    #select first column to get a list of column names of 'survey_raw' for open-ended questions
-multia_q_list = multia_q['question'].tolist()
-multia_data = survey_raw[survey_raw.columns.intersection(multia_q_list)]
+    multia_q = q_type[q_type['type_2'] == 'multi-answer']
+        #select first column to get a list of column names of 'survey_raw' for open-ended questions
+    multia_q_list = multia_q['question'].tolist()
+    multia_data = survey_raw[survey_raw.columns.intersection(multia_q_list)]
 
+    q14_list = ['Question 14Executive (e.g. President, CEO, VP, Executive Director)','Question 14Scientist/Researcher/Professor',\
+        'Question 14Senior Management (e.g. Director, Manager)','Question 14Analyst, advisor, coordinator, officer, consultant, etc.',\
+            'Question 14Student or Postdoctoral Fellow','Question 14Other','Question 14Other']
+    df = survey_raw[q14_list]
+ 
+    df1 = pd.concat([df, df.T.stack().reset_index(name='Question 14')['Question 14']], axis=1) #Combine columns
+    df2 = df1['Question 14']
+    df2.dropna()
 
-#Question 14 - Multiple Ans (subset 3)
-q14 = convert_percent(multia_data,'Question 14')
-pie_chart(q14)
+    df3 = df2.value_counts(normalize = True) 
+    df3 = pd.DataFrame(df3).reset_index()
+    df3.columns = ['answer', 'percent']
+    df3['percent'] = df3['percent']*100
+    pie_chart(df3,'Question 14')
