@@ -37,10 +37,15 @@ df = convert_percent(survey_raw, filter_col)
 
 #clean up question 3 dataframe
 df['answer'] = df['answer'].str.replace('Question 3', '')
+# sort the columns by %, then move 'Other' to be plotted at the end
+df = df.sort_values('percent')
+df['order'] = [6, 0, 1, 2, 3, 4, 5]
+df = df.set_index('order')
+df = df.sort_values('order')
 
 #graph
 g3 = sns.catplot(y = 'answer', x = 'percent', kind = "bar", data = df, color = '#203864')
-g3.fig.set_size_inches(8, 6) #set figure size
+g3.fig.set_size_inches(12, 6) #set figure size
 # extract the matplotlib axes_subplot objects from the FacetGrid
 ax = g3.facet_axis(0, 0)
 # iterate through the axes containers
