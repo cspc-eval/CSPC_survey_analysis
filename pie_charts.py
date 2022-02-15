@@ -25,14 +25,15 @@ def pie_chart(df, question):
     This function creates pie charts from dataframes (df), and question number as an input  
     """
     
-    colors = ['#203864', '#c00000', '#8faadc', '#b4c7e7','#a5a5a5', '#e3877d', '#9dc3e6', '#4472c4']
+    colors = ['#203864', '#c00000', '#8faadc','#a5a5a5', '#b4c7e7', '#e3877d', '#9dc3e6', '#4472c4']
     fig = plt.figure(figsize = [6,10])
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])    
-    patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%', pctdistance=1.2)
-    plt.legend(df['answer'], bbox_to_anchor=(1,0.15), loc="center right", fontsize=10, 
-           bbox_transform=plt.gcf().transFigure)
+    patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%',startangle=90, pctdistance=1.1)
+    #patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%', pctdistance=1.2)
+    plt.legend(df['answer'], loc="center left", bbox_to_anchor=(1,0.5), fontsize=14) 
+#           bbox_transform=plt.gcf().transFigure)
     plt.setp(pcts, fontweight='bold')
-#   plt.show()
+#    plt.show()
     name = question + '.png'
     fig.savefig(name, format='png', dpi=300, bbox_inches="tight")
 
@@ -52,8 +53,15 @@ q_type = pd.read_csv(survey_fileQ_path, encoding = 'utf-8')
         #2) closed, nominal/ranked answers
         #3) closed, multiple answers
 
+#TODO
+# Make pie chart in order of data, clockwise high to low
+
+#Q13- Use per capita
+#Q14- Create bar chart
+#Q20- Plot actual number of people
+
 #Questions 13, 15-20
-subset1 = False
+subset1 =False
 if subset1:
         #for subset csv #1 (mc_data.csv)
     #select data with type2 in q_type.csv as 'mc' to select closed, multiple choice answers
