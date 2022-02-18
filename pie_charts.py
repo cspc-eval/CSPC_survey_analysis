@@ -20,6 +20,32 @@ def convert_percent(survey_raw, question):
     #df.sort_values('answer')
     return df
 
+def convert_values(survey_raw, question):
+    """
+    This function will take the raw data and create a dataframe with a summary of data showing the values of each answer.
+    The function will return a pandas dataframe.
+    """
+    df = survey_raw[question].value_counts() 
+    df = pd.DataFrame(df).reset_index()
+    df.columns = ['answer', 'values']
+    return df    
+
+
+def convert_values_per_capita(survey_raw, question):
+    """
+    This function will take the raw data and create a dataframe with a summary of data showing the values of each answer.
+    The function will return a pandas dataframe.
+    """
+    df = survey_raw[question].value_counts() 
+    df = pd.DataFrame(df).reset_index()
+    df.columns = ['answer', 'values']
+    df = df.drop(2) #Drop value outside Canada
+    pop =[23546417, 7031370, 2480826, 5249635, 128199] # population of Central Canada (ON, QC),  Prairie Provinces (AB, SK, MB),  
+    #Atlantic Canada (NB, NL, NS, PE), West Coast (BC), Northern Territories (NT, NU, YT)   (Source Q42021: https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710000901)
+    df['percent']=(df['values']/pop)
+    return df   
+
+
 def pie_chart(df, question):
     """
     This function creates pie charts from dataframes (df), and question number as an input  
@@ -29,9 +55,27 @@ def pie_chart(df, question):
     fig = plt.figure(figsize = [6,10])
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])    
     patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%',startangle=90, pctdistance=1.1)
-    #patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%', pctdistance=1.2)
     plt.legend(df['answer'], loc="center left", bbox_to_anchor=(1,0.5), fontsize=14) 
-#           bbox_transform=plt.gcf().transFigure)
+    plt.setp(pcts, fontweight='bold')
+#    plt.show()
+    name = question + '.png'
+    fig.savefig(name, format='png', dpi=300, bbox_inches="tight")
+
+
+def pie_chart_values(df, question):
+    """
+    This function creates pie charts from dataframes (df), and question number as an input  
+    """
+    def value_fn(x):
+        print(x)
+        return '{:.0f}'.format(total*x/100)
+    
+    colors = ['#203864', '#c00000', '#8faadc','#a5a5a5', '#b4c7e7', '#e3877d', '#9dc3e6', '#4472c4']
+    fig = plt.figure(figsize = [6,10])
+    ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+    total=df['values'].sum()    
+    patches, texts, pcts = ax.pie(df['values'], colors = colors, autopct=value_fn,startangle=90, pctdistance=1.1)
+    plt.legend(df['answer'], loc="center left", bbox_to_anchor=(1,0.5), fontsize=14) 
     plt.setp(pcts, fontweight='bold')
 #    plt.show()
     name = question + '.png'
@@ -53,15 +97,8 @@ q_type = pd.read_csv(survey_fileQ_path, encoding = 'utf-8')
         #2) closed, nominal/ranked answers
         #3) closed, multiple answers
 
-#TODO
-# Make pie chart in order of data, clockwise high to low
-
-#Q13- Use per capita
-#Q14- Create bar chart
-#Q20- Plot actual number of people
-
 #Questions 13, 15-20
-subset1 =False
+subset1 =True
 if subset1:
         #for subset csv #1 (mc_data.csv)
     #select data with type2 in q_type.csv as 'mc' to select closed, multiple choice answers
@@ -71,7 +108,7 @@ if subset1:
     mc_data = survey_raw[survey_raw.columns.intersection(mc_q_list)]
 
     #Question 13
-    q13 = convert_percent(mc_data,'Question 13')
+    q13 = convert_values_per_capita(mc_data,'Question 13')
     pie_chart(q13,'Question 13')
 
     #Question 15
@@ -95,8 +132,8 @@ if subset1:
     pie_chart(q19,'Question 19')
 
     #Question 20
-    q20 = convert_percent(mc_data,'Question 20')
-    pie_chart(q20,'Question 20')
+    q20 = convert_values(mc_data,'Question 20')
+    pie_chart_values(q20,'Question 20')
 
 #Question 14,(multiple choice, closed)
 subset3 = True
