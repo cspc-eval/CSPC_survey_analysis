@@ -16,8 +16,12 @@ def convert_percent(survey_raw, question):
     df = survey_raw[question].value_counts(normalize = True) 
     df = pd.DataFrame(df).reset_index()
     df.columns = ['answer', 'percent']
+    print('Current Question: {}'.format(question))
+    df1 = survey_raw[question].value_counts()
+    df1 = pd.DataFrame(df1).reset_index()
+    df1.columns = ['answer', 'values']    
+    print('Total responses (N): {}'.format(df1['values'].sum()))
     df['percent'] = df['percent']*100
-    #df.sort_values('answer')
     return df
 
 def convert_values(survey_raw, question):
@@ -28,6 +32,8 @@ def convert_values(survey_raw, question):
     df = survey_raw[question].value_counts() 
     df = pd.DataFrame(df).reset_index()
     df.columns = ['answer', 'values']
+    print('Current Question: {}'.format(question))
+    print('Total responses (N): {}'.format(df['values'].sum()))
     return df    
 
 
@@ -39,6 +45,8 @@ def convert_values_per_capita(survey_raw, question):
     df = survey_raw[question].value_counts() 
     df = pd.DataFrame(df).reset_index()
     df.columns = ['answer', 'values']
+    print('Current Question: {}'.format(question))
+    print('Total responses (N): {}'.format(df['values'].sum()))
     df = df.drop(2) #Drop value outside Canada
     pop =[23546417, 7031370, 2480826, 5249635, 128199] # population of Central Canada (ON, QC),  Prairie Provinces (AB, SK, MB),  
     #Atlantic Canada (NB, NL, NS, PE), West Coast (BC), Northern Territories (NT, NU, YT)   (Source Q42021: https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710000901)
@@ -51,7 +59,7 @@ def pie_chart(df, question):
     This function creates pie charts from dataframes (df), and question number as an input  
     """
     
-    colors = ['#203864', '#c00000', '#8faadc','#a5a5a5', '#b4c7e7', '#e3877d', '#9dc3e6', '#4472c4']
+    colors = ['#203864', '#4472c4','#a5a5a5','#e3877d', '#8faadc', '#b4c7e7',  '#9dc3e6','#c00000']
     fig = plt.figure(figsize = [6,10])
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])    
     patches, texts, pcts = ax.pie(df['percent'], colors = colors, autopct='%1.0f%%',startangle=90, pctdistance=1.1)
@@ -70,7 +78,7 @@ def pie_chart_values(df, question):
         print(x)
         return '{:.0f}'.format(total*x/100)
     
-    colors = ['#203864', '#c00000', '#8faadc','#a5a5a5', '#b4c7e7', '#e3877d', '#9dc3e6', '#4472c4']
+    colors = ['#203864', '#4472c4','#a5a5a5','#e3877d', '#8faadc', '#b4c7e7',  '#9dc3e6','#c00000']
     fig = plt.figure(figsize = [6,10])
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
     total=df['values'].sum()    
@@ -131,8 +139,9 @@ if subset1:
     q19 = convert_percent(mc_data,'Question 19')
     pie_chart(q19,'Question 19')
 
-    #Question 20
+    # #Question 20
     q20 = convert_values(mc_data,'Question 20')
+#   q20.to_csv("q20.csv")
     pie_chart_values(q20,'Question 20')
 
 #Question 14,(multiple choice, closed)
